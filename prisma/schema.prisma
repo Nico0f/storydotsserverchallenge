@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          Int               @id @default(autoincrement())
+  published   Boolean           @default(true)
+  name        String
+  description String
+  image_url   String
+  price       Int
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  category    ProductCategory[]
+  color       ProductColor[]
+  brand       ProductBrand[]
+  style       ProductStyle[]
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  first_name  String
+  last_name   String
+  email       String   @unique
+  hashed_pass String?
+  avatar      String?
+  is_admin    Boolean  @default(false)
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model ProductColor {
+  id         Int     @id @default(autoincrement())
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id Int
+  color      Color   @relation(fields: [color_id], references: [id], onDelete: Cascade)
+  color_id   Int
+
+  @@unique([color_id, product_id])
+}
+
+model Color {
+  id            Int            @id @default(autoincrement())
+  name          String
+  colors_url    String[]
+  primary_url   String?
+  secondary_url String?
+  hex_value     String
+  hex_value_2   String?
+  product       ProductColor[]
+}
+
+model ProductCategory {
+  id          Int      @id @default(autoincrement())
+  product     Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id  Int
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category_id Int
+
+  @@unique([category_id, product_id])
+}
+
+model Category {
+  id      Int               @id @default(autoincrement())
+  name    String            @unique
+  product ProductCategory[]
+}
+
+model ProductStyle {
+  id         Int     @id @default(autoincrement())
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id Int
+  style      Style   @relation(fields: [style_id], references: [id], onDelete: Cascade)
+  style_id   Int
+
+  @@unique([style_id, product_id])
+}
+
+model Style {
+  id      Int            @id @default(autoincrement())
+  name    String         @unique
+  product ProductStyle[]
+}
+
+model ProductBrand {
+  id         Int     @id @default(autoincrement())
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id Int
+  brand      Brand   @relation(fields: [brand_id], references: [id], onDelete: Cascade)
+  brand_id   Int
+
+  @@unique([brand_id, product_id])
+}
+
+model Brand {
+  id       Int            @id @default(autoincrement())
+  name     String         @unique
+  logo_url String
+  product  ProductBrand[]
+}
