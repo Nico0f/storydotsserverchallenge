@@ -15,7 +15,7 @@ exports.app.use(express_1.default.json());
 //   tempFileDir : './temporalImg/'
 // }))
 exports.app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
+    origin: "*",
 }));
 exports.app.use('/', index_1.default);
 //# sourceMappingURL=app.js.map

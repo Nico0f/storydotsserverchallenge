@@ -5,7 +5,7 @@ import { app } from './app'
 const port: number = 3001
 
 app.get('/', async (req, res) => {
-
+  res.send('Hello World')
 })
 
 app.listen(port, () => {

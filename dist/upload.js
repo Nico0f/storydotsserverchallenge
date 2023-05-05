@@ -6,15 +6,43 @@ const finalwomens_js_1 = require("../products/finalwomens.js");
 const prisma = new client_1.PrismaClient();
 // const products = readFile('../products/mens_shirts.json')
 // const json = JSON.parse();
+function randomInt() {
+    return Math.random() * 100;
+}
 async function main() {
+    let i = 0;
     const arr = [];
     const names = [];
+    // const brands = [
+    //   {
+    //     name: 'Lotte',
+    //     logo_url: 'https://res.cloudinary.com/dgcsnhguo/image/upload/v1683315714/storydots/attachment_120552221_xjc2wl.png'
+    //   },
+    //   {
+    //     name: 'Fit',
+    //     logo_url: 'https://res.cloudinary.com/dgcsnhguo/image/upload/v1683315827/storydots/d87243c31ab5837a7dc4d24b5b3ac977_ewziaq.jpg'
+    //   },
+    //   {
+    //     name: 'Globals',
+    //     logo_url: 'https://res.cloudinary.com/dgcsnhguo/image/upload/v1683315906/storydots/689b088d15774cdf3d77a3df990239cf_bdjtr3.jpg'
+    //   }
+    // ]
+    // for (const brand of brands) {
+    //   await prisma.brand.create({
+    //     data: {
+    //       name: brand.name,
+    //       logo_url: brand.logo_url
+    //     }
+    //   })
+    // }
     const stylename = await prisma.style.create({
         data: {
             name: 'women'
         }
     });
     for (let product of finalwomens_js_1.pr) {
+        console.log('Adding: ' + i);
+        i = i + 1;
         if (names.includes(product.name)) {
             let existing = await prisma.product.findFirst({
                 where: {
@@ -50,6 +78,31 @@ async function main() {
                     price: Number(product.price),
                 },
             });
+            const num = randomInt();
+            if (num <= 30) {
+                await prisma.productBrand.create({
+                    data: {
+                        product_id: newbook.id,
+                        brand_id: 1
+                    }
+                });
+            }
+            else if (num > 30 && num < 60) {
+                await prisma.productBrand.create({
+                    data: {
+                        product_id: newbook.id,
+                        brand_id: 2
+                    }
+                });
+            }
+            else {
+                await prisma.productBrand.create({
+                    data: {
+                        product_id: newbook.id,
+                        brand_id: 3
+                    }
+                });
+            }
             if (!arr.includes(product.category)) {
                 const categoryname = await prisma.category.create({
                     data: {
