@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateProduct = exports.getOneProductAdmin = exports.deleteManyProducts = exports.getAllProductsAdmin = exports.deleteOneProduct = exports.getOneProduct = exports.getAllProducts = void 0;
+exports.CreateProductAdmin = exports.UpdateProduct = exports.getOneProductAdmin = exports.deleteManyProducts = exports.getAllProductsAdmin = exports.deleteOneProduct = exports.getOneProduct = exports.getAllProducts = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 async function getAllProducts(limit, offset, category, style, order) {
     try {
@@ -326,4 +326,55 @@ async function UpdateProduct(id, name, published, description, image_url, price)
     }
 }
 exports.UpdateProduct = UpdateProduct;
+async function CreateProductAdmin(name, description, price, published, image_url, category, brand, style) {
+    try {
+        const newProduct = await prisma_1.default.product.create({
+            data: {
+                name,
+                published: published === 'true' ? true : false,
+                price: Number(price),
+                image_url,
+                description,
+                category: {
+                    create: {
+                        category: {
+                            connect: {
+                                name: category
+                            }
+                        }
+                    }
+                },
+                brand: {
+                    create: {
+                        brand: {
+                            connect: {
+                                name: brand
+                            }
+                        }
+                    }
+                },
+                style: {
+                    create: {
+                        style: {
+                            connect: {
+                                name: style
+                            }
+                        }
+                    }
+                }
+            },
+        });
+        return {
+            message: 'Succes',
+            content: newProduct
+        };
+    }
+    catch (error) {
+        console.log(error);
+        return {
+            message: 'Error'
+        };
+    }
+}
+exports.CreateProductAdmin = CreateProductAdmin;
 //# sourceMappingURL=productcontrollers.js.map

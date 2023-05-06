@@ -2,7 +2,6 @@ import { Router } from "express";
 
 /* ↓ products ↓  */
 import getAllProducts from './product/getallproducts'
-import postProduct from './product/postproduct'
 import getOneProduct from './product/getoneproduct'
 import deleteOneProduct from './product/deleteproduct'
 import signUpUser from './user/createuser'
