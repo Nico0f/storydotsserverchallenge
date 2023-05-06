@@ -29,26 +29,37 @@ async function createUser(first_name, last_name, email, password) {
 exports.createUser = createUser;
 async function loginUser(email, password) {
     try {
-        const existingUser = await prisma_1.default.user.findUnique({
+        const user = await prisma_1.default.user.findUnique({
             where: {
                 email
             }
         });
-        if (!existingUser)
+        if (!user)
             return { message: "User doesnt exist!" };
-        const comparePassword = await bcrypt.compare(password, existingUser.hashed_pass);
+        const comparePassword = await bcrypt.compare(password, user.hashed_pass);
         if (!comparePassword) {
             return { message: "Incorrect Password!" };
         }
-        if (!existingUser.is_active)
+        if (!user.is_active)
             return { message: "Inactive user!" };
-        const token = await jwt.sign({ _id: existingUser.id }, process.env.JWTKEYAT, { expiresIn: "2d" });
+        const token = await jwt.sign({ id: user.id }, process.env.JWTKEYAT, { expiresIn: "2d" });
+        if (user.is_admin) {
+            return {
+                message: 'Success',
+                admin: true,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                avatar: user.avatar,
+                token
+            };
+        }
         return {
             message: 'Success',
-            first_name: existingUser.first_name,
-            last_name: existingUser.last_name,
-            email: existingUser.email,
-            avatar: existingUser.avatar,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            avatar: user.avatar,
             token
         };
     }

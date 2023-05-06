@@ -29,30 +29,42 @@ export async function createUser(first_name: string, last_name: string, email: s
 export async function loginUser(email: string, password: string) {
 
     try {
-        const existingUser = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 email
             }
         })
 
-        if (!existingUser) return {message: "User doesnt exist!"}
+        if (!user) return {message: "User doesnt exist!"}
         
-        const comparePassword = await bcrypt.compare(password, existingUser.hashed_pass)
+        const comparePassword = await bcrypt.compare(password, user.hashed_pass)
 
         if (!comparePassword) {
             return {message: "Incorrect Password!"}
         }
 
-        if(!existingUser.is_active) return {message: "Inactive user!"}
+        if(!user.is_active) return {message: "Inactive user!"}
 
-        const token = await jwt.sign({_id: existingUser.id}, process.env.JWTKEYAT, {expiresIn: "2d"})
+        const token = await jwt.sign({id: user.id}, process.env.JWTKEYAT, {expiresIn: "2d"})
+
+        if (user.is_admin) {
+            return {
+                message: 'Success',
+                admin: true,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                avatar: user.avatar,
+                token
+            }
+        }
     
         return {
             message: 'Success',
-            first_name: existingUser.first_name,
-            last_name: existingUser.last_name,
-            email: existingUser.email,
-            avatar: existingUser.avatar,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            avatar: user.avatar,
             token
         }
 

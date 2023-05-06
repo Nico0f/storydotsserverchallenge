@@ -227,7 +227,7 @@ export async function deleteManyProducts(products: number[]) {
             {
                 message: 'Success'
             }
-        ) 
+        )
 
     } catch (error) {
         console.log(error)
@@ -276,7 +276,37 @@ export async function getOneProductAdmin(id: string) {
         return product
     } catch (error) {
         console.log(error)
-        
+
     }
 
+}
+
+export async function UpdateProduct(id: string, name: string | undefined, published: string | undefined, description: string | undefined, image_url: string | undefined, price: string | undefined) {
+    console.log(published)
+    try {
+        const updatedProduct = await prisma.product.update({
+            where: {
+                id: Number(id)
+            },
+            data: {
+                name: name ? name : undefined,
+                description: description ? description : undefined,
+                price: price ? Number(price) : undefined,
+                image_url: image_url ? image_url : undefined,
+                published: published ? published === 'true' ? true :  false : undefined
+            }
+        })
+
+        console.log(updatedProduct)
+        return {
+            message: 'Success',
+            content: updatedProduct
+        }
+
+    } catch (error) {
+        console.log(error)
+        return {
+            message: 'Error'
+        }
+    }
 }

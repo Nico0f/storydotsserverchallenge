@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { getOneProduct } from "../../controllers/productcontrollers";
-// import  getAllWines  from '../../controllers/GetAllWines';
-// import filterAllWines from "../../controllers/FilterAllWines"
+
 
 const router = Router()
 

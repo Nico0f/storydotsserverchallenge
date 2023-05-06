@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOneProductAdmin = exports.deleteManyProducts = exports.getAllProductsAdmin = exports.deleteOneProduct = exports.getOneProduct = exports.getAllProducts = void 0;
+exports.UpdateProduct = exports.getOneProductAdmin = exports.deleteManyProducts = exports.getAllProductsAdmin = exports.deleteOneProduct = exports.getOneProduct = exports.getAllProducts = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 async function getAllProducts(limit, offset, category, style) {
     try {
@@ -271,4 +271,33 @@ async function getOneProductAdmin(id) {
     }
 }
 exports.getOneProductAdmin = getOneProductAdmin;
+async function UpdateProduct(id, name, published, description, image_url, price) {
+    console.log(published);
+    try {
+        const updatedProduct = await prisma_1.default.product.update({
+            where: {
+                id: Number(id)
+            },
+            data: {
+                name: name ? name : undefined,
+                description: description ? description : undefined,
+                price: price ? Number(price) : undefined,
+                image_url: image_url ? image_url : undefined,
+                published: published ? published === 'true' ? true : false : undefined
+            }
+        });
+        console.log(updatedProduct);
+        return {
+            message: 'Success',
+            content: updatedProduct
+        };
+    }
+    catch (error) {
+        console.log(error);
+        return {
+            message: 'Error'
+        };
+    }
+}
+exports.UpdateProduct = UpdateProduct;
 //# sourceMappingURL=productcontrollers.js.map
