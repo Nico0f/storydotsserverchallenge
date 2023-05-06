@@ -1,8 +1,8 @@
-import express from "express";
+import express, { Express } from "express";
 import routes from './routes/index'
 import cors from "cors";
 
-export const app = express()
+export const app: Express = express()
 // app.use(morgan('dev'));
 app.use(express.json())
 // app.use(fileUpload({

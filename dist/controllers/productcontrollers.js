@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateProduct = exports.getOneProductAdmin = exports.deleteManyProducts = exports.getAllProductsAdmin = exports.deleteOneProduct = exports.getOneProduct = exports.getAllProducts = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
-async function getAllProducts(limit, offset, category, style) {
+async function getAllProducts(limit, offset, category, style, order) {
     try {
         let categories = category.split(',');
         if (categories.length > 0 && categories[0] !== 'undefined') {
@@ -22,6 +22,19 @@ async function getAllProducts(limit, offset, category, style) {
                                 }
                             }
                         }
+                    },
+                },
+                orderBy: {
+                    product: {
+                        price: (order
+                            ?
+                                order === 'priceAs'
+                                    ?
+                                        'asc'
+                                    :
+                                        'desc'
+                            :
+                                undefined)
                     }
                 },
                 include: {
@@ -68,6 +81,19 @@ async function getAllProducts(limit, offset, category, style) {
             where: {
                 style: {
                     name: style
+                }
+            },
+            orderBy: {
+                product: {
+                    price: (order
+                        ?
+                            order === 'priceAs'
+                                ?
+                                    'asc'
+                                :
+                                    'desc'
+                        :
+                            undefined)
                 }
             },
             select: {

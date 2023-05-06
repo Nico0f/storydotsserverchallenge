@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+import { Request, Response, NextFunction } from "express";
 import prisma from "../../prisma";
 import { config } from "dotenv";
 config();
@@ -6,7 +7,7 @@ config();
 //* /AdminStatus/
 
 
-async function checkAdmin(req: any, res: any, next: any) {
+async function checkAdmin(req: Request, res: Response, next: NextFunction) {
     let token
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         try {

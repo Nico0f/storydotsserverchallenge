@@ -21,7 +21,10 @@ export async function createUser(first_name: string, last_name: string, email: s
 
         return newUser
     } catch (error) {
-
+        console.log(error)
+        return {
+            message: 'Error'
+        }
     }
     
 }

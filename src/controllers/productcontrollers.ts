@@ -1,9 +1,10 @@
 import prisma from "../prisma";
 
-export async function getAllProducts(limit: number, offset: number, category: string, style: string) {
+export async function getAllProducts(limit: number, offset: number, category: string, style: string, order: string) {
     try {
 
         let categories = category.split(',')
+
 
         if (categories.length > 0 && categories[0] !== 'undefined') {
             const allproducts = await prisma.productStyle.findMany({
@@ -19,6 +20,20 @@ export async function getAllProducts(limit: number, offset: number, category: st
                                 }
                             }
                         }
+                    },
+                },
+                orderBy: {
+                    product: {
+                        price: 
+                        (order
+                        ?
+                        order === 'priceAs'
+                        ?
+                        'asc'
+                        :
+                        'desc'
+                        :
+                        undefined)
                     }
                 },
                 include: {
@@ -68,6 +83,20 @@ export async function getAllProducts(limit: number, offset: number, category: st
             where: {
                 style: {
                     name: style
+                }
+            },
+            orderBy: {
+                product: {
+                    price: 
+                    (order
+                    ?
+                    order === 'priceAs'
+                    ?
+                    'asc'
+                    :
+                    'desc'
+                    :
+                    undefined)
                 }
             },
             select: {
@@ -309,4 +338,60 @@ export async function UpdateProduct(id: string, name: string | undefined, publis
             message: 'Error'
         }
     }
+}
+
+export async function CreateProductAdmin(name: string, description: string, price: string, published: string, image_url: string, category: string, brand: string, style: string) {
+
+    try {
+
+        const newProduct = await prisma.product.create({
+            data: {
+                name,
+                published: published === 'true' ? true : false,
+                price: Number(price),
+                image_url,
+                description,
+                category: {
+                    create: {
+                        category: {
+                            connect: {
+                                name: category
+                            }
+                        }
+                    }
+                },
+                brand: {
+                    create: {
+                        brand: {
+                            connect: {
+                                name: brand
+                            }
+                        }
+                    }
+                },
+                style: {
+                    create: {
+                        style: {
+                            connect: {
+                                name: style
+                            }
+                        }
+                    }
+                }
+            },
+            
+        })
+
+        return {
+            message: 'Succes',
+            content: newProduct
+        }
+
+    } catch (error) {
+        console.log(error)
+        return {
+            message: 'Error'
+        }
+    }
+
 }

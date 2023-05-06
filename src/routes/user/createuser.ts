@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { createUser } from "../../controllers/usercontrollers";
 
 const router = Router()
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: Request, res: Response) => {
 
     try {
 

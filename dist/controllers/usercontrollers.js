@@ -24,6 +24,10 @@ async function createUser(first_name, last_name, email, password) {
         return newUser;
     }
     catch (error) {
+        console.log(error);
+        return {
+            message: 'Error'
+        };
     }
 }
 exports.createUser = createUser;

@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { deleteManyProducts } from "../../controllers/productcontrollers";
 
 const router = Router()
 
-router.delete("/", async (req, res) => {
+router.delete("/", async (req: Request, res: Response) => {
     
     const { products} = req.body
     const productsParsed = products.map((element: string) => Number(element))

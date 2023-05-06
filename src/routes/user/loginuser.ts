@@ -1,9 +1,10 @@
 import { Router } from "express"
 import { loginUser } from "../../controllers/usercontrollers";
+import { Request, Response } from "express";
 
 const router = Router()
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: Request, res: Response) => {
     
     const {email, password} = req.body
     
